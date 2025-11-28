@@ -1,0 +1,45 @@
+name: CI/CD to Azure Web App
+
+on:
+  push:
+    branches:
+      - main          # only main deploys (matches assignment)
+  workflow_dispatch:  # allow manual runs from Actions tab
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+          pip install pytest pytest-django pytest-cov
+
+      - name: Run tests with coverage
+        run: |
+          source .venv/bin/activate
+          pytest --cov=tasks --cov=todo --cov-report=xml --cov-fail-under=70
+
+      # This builds the Docker image as part of the CI pipeline
+      - name: Build Docker image
+        run: |
+          docker build -t todo2-app:${{ github.sha }} .
+
+      # This deploys the app to your Azure Web App using the publish profile
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "mjtodo2-webapp"  # your web app name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: "."
