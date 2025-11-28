@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  {% load static %}
+<link rel="icon" href="{% static 'favicon.svg' %}">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}?v=2">
+  <meta charset="utf-8">
+  <title>To-do</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{% url 'tasks:list' %}">To-do</a>
+    <nav>
+      <a href="{% url 'tasks:list' %}">List</a>
+      <a href="{% url 'tasks:kanban' %}">Kanban</a>
+      <a href="{% url 'tasks:export' %}">Export CSV</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

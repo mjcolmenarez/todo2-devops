@@ -1,0 +1,12 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+<h1>{{ form.instance.pk|yesno:"Edit Task,New Task" }}</h1>
+<form method="post" class="card form-grid">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div class="actions">
+    <button class="btn" type="submit">Save</button>
+    <a class="linkbtn" href="{% url 'tasks:list' %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

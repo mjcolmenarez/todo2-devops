@@ -1,0 +1,24 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+<h1>Kanban</h1>
+<div class="kanban">
+  <section>
+    <h3>To-do</h3>
+    {% for t in todo %}
+      <div class="card"><a href="{% url 'tasks:edit' t.pk %}">{{ t.title }}</a></div>
+    {% empty %}<p class="muted">Nothing here.</p>{% endfor %}
+  </section>
+  <section>
+    <h3>Doing</h3>
+    {% for t in doing %}
+      <div class="card"><a href="{% url 'tasks:edit' t.pk %}">{{ t.title }}</a></div>
+    {% empty %}<p class="muted">Nothing here.</p>{% endfor %}
+  </section>
+  <section>
+    <h3>Done</h3>
+    {% for t in done %}
+      <div class="card done"><a href="{% url 'tasks:edit' t.pk %}">{{ t.title }}</a></div>
+    {% empty %}<p class="muted">Nothing here.</p>{% endfor %}
+  </section>
+</div>
+{% endblock %}
