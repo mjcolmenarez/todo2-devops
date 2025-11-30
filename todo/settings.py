@@ -3,19 +3,15 @@ import os   # 👈 add this
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 🔐 SECRET_KEY – read from env in production, fallback for local dev
+# Secret key – default is dev-only, Azure overrides via environment
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-later")
 
-# 🧪 DEBUG – string env var -> boolean
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+# Debug – read from env, default True for local dev
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# 🌍 ALLOWED_HOSTS – from env when not DEBUG
-if DEBUG:
-    ALLOWED_HOSTS = []
-else:
-    hosts = os.environ.get("ALLOWED_HOSTS", "")
-    # e.g. "mjtodo2-codewebapp-....azurewebsites.net,.azurewebsites.net"
-    ALLOWED_HOSTS = [h.strip() for h in hosts.split(",") if h.strip()]
+# Allowed hosts – comma-separated list from env
+raw_hosts = os.environ.get("ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]
 
 #Apps we're using. "tasks" is the home-grown here 
 #If something doesn't exists you check it here
