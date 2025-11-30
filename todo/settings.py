@@ -1,14 +1,21 @@
-#This file is where we keep all the knobs and switches 
-#If you tweak something here and save, the app will often do something different right away
 from pathlib import Path
+import os   # 👈 add this
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-#Secret sauce used by Django for security stuff 
-SECRET_KEY = "dev-only-change-later"
-#Great for building
-DEBUG = True
-#Who's allowed to talk to this app. This could be like the list of domain(s)
-ALLOWED_HOSTS = []
+
+# 🔐 SECRET_KEY – read from env in production, fallback for local dev
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-later")
+
+# 🧪 DEBUG – string env var -> boolean
+DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+
+# 🌍 ALLOWED_HOSTS – from env when not DEBUG
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    hosts = os.environ.get("ALLOWED_HOSTS", "")
+    # e.g. "mjtodo2-codewebapp-....azurewebsites.net,.azurewebsites.net"
+    ALLOWED_HOSTS = [h.strip() for h in hosts.split(",") if h.strip()]
 
 #Apps we're using. "tasks" is the home-grown here 
 #If something doesn't exists you check it here
