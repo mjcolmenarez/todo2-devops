@@ -25,7 +25,6 @@ a{color:#8ab4ff;text-decoration:none}
 .kanban{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .kanban h3{margin-top:0}
 .muted{opacity:.6}
-cat >> static/css/styles.css <<'EOF'
 
 /* === UI polish: design tokens & base === */
 :root{
