@@ -1,40 +1,33 @@
-from pathlib import Path
-import os
+# todo/settings.py
 
-# -----------------------------------------
-# Paths
-# -----------------------------------------
+from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# -----------------------------------------
-# Security / environment
-# -----------------------------------------
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-later")
+# ---------------------------------------------------------
+# Basic security / debug
+# ---------------------------------------------------------
+SECRET_KEY = "dev-only-change-later"  # OK for this assignment
 
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+# We want production-style behaviour on Azure
+DEBUG = False
 
-# ALLOWED_HOSTS from env, comma-separated
-raw_hosts = os.environ.get("ALLOWED_HOSTS", "")
-if raw_hosts:
-    ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(",") if h.strip()]
-else:
-    # Local default
-    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+# Easiest fix for all the host / health-check issues:
+# allow all hosts. This is fine for a school project.
+ALLOWED_HOSTS = ["*"]
 
-# CSRF trusted origins (needed for Azure HTTPS forms)
-raw_csrf = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
-if raw_csrf:
-    CSRF_TRUSTED_ORIGINS = [o.strip() for o in raw_csrf.split(",") if o.strip()]
-else:
-    CSRF_TRUSTED_ORIGINS = [
-        f"https://{h}"
-        for h in ALLOWED_HOSTS
-        if "localhost" not in h and "127.0.0.1" not in h
-    ]
+# Needed so POSTs from your Azure site pass CSRF checks
+CSRF_TRUSTED_ORIGINS = [
+    "https://mjtodo2-codewebapp-e4c2grfvsgwgcjbh.westeurope-01.azurewebsites.net",
+    "https://mjtodo2-webapp-eqekfremh0hscwgt.westeurope-01.azurewebsites.net",
+    "https://*.azurewebsites.net",
+    "https://localhost",
+    "https://127.0.0.1",
+]
 
-# -----------------------------------------
-# Applications
-# -----------------------------------------
+# ---------------------------------------------------------
+# Apps
+# ---------------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -45,9 +38,9 @@ INSTALLED_APPS = [
     "tasks",
 ]
 
-# -----------------------------------------
+# ---------------------------------------------------------
 # Middleware
-# -----------------------------------------
+# ---------------------------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -61,9 +54,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "todo.urls"
 
-# -----------------------------------------
+# ---------------------------------------------------------
 # Templates
-# -----------------------------------------
+# ---------------------------------------------------------
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -82,9 +75,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "todo.wsgi.application"
 
-# -----------------------------------------
+# ---------------------------------------------------------
 # Database (SQLite)
-# -----------------------------------------
+# ---------------------------------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -92,28 +85,18 @@ DATABASES = {
     }
 }
 
-# -----------------------------------------
-# Internationalization
-# -----------------------------------------
+# ---------------------------------------------------------
+# i18n / timezone
+# ---------------------------------------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# -----------------------------------------
-# Static files (CSS, JS, images)
-# -----------------------------------------
+# ---------------------------------------------------------
+# Static files
+# ---------------------------------------------------------
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# Where your project-level static/ folder lives (for dev)
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-# Where collectstatic will put files (for Azure)
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# -----------------------------------------
-# Default primary key field type
-# -----------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
