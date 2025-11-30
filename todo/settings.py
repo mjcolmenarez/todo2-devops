@@ -1,22 +1,20 @@
 # todo/settings.py
-
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ---------------------------------------------------------
-# Basic security / debug
+# Security / debug
 # ---------------------------------------------------------
-SECRET_KEY = "dev-only-change-later"  # OK for this assignment
+SECRET_KEY = "dev-only-change-later"  # OK for this project
 
-# We want production-style behaviour on Azure
+# Keep False in Azure, but we can set True locally if we want.
 DEBUG = False
 
-# Easiest fix for all the host / health-check issues:
-# allow all hosts. This is fine for a school project.
+# Allow ALL hosts so we never see DisallowedHost / 400 again.
 ALLOWED_HOSTS = ["*"]
 
-# Needed so POSTs from your Azure site pass CSRF checks
+# Trust your Azure sites for CSRF so forms work
 CSRF_TRUSTED_ORIGINS = [
     "https://mjtodo2-codewebapp-e4c2grfvsgwgcjbh.westeurope-01.azurewebsites.net",
     "https://mjtodo2-webapp-eqekfremh0hscwgt.westeurope-01.azurewebsites.net",
